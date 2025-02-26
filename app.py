@@ -1,7 +1,21 @@
+import subprocess
+import sys
+
+# Ensure required libraries are installed
+def install(package):
+    subprocess.check_call([sys.executable, "-m", "pip", "install", package])
+
+for package in ["joblib", "scikit-learn", "pandas", "numpy"]:
+    try:
+        __import__(package)
+    except ImportError:
+        install(package)
+
 import joblib
 import pandas as pd
 import numpy as np
 from sklearn.preprocessing import StandardScaler
+
 
 
 # Load the model and scaler using pickle
