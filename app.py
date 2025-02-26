@@ -1,19 +1,8 @@
-import os
-import subprocess
-
-# Install required libraries if missing
-required_libs = ["joblib", "scikit-learn", "pandas", "numpy"]
-for lib in required_libs:
-    try:
-        __import__(lib)
-    except ImportError:
-        subprocess.run(["pip", "install", lib])
-
-import streamlit as st
 import joblib
 import pandas as pd
 import numpy as np
 from sklearn.preprocessing import StandardScaler
+
 
 # Load the model and scaler using pickle
 with open("crop_yield_model.pkl", "rb") as model_file:
