@@ -1,9 +1,12 @@
 import subprocess
 import sys
 
-# Function to install missing packages
 def install(package):
-    subprocess.run([sys.executable, "-m", "pip", "install", package], stdout=sys.stdout, stderr=sys.stderr)
+    subprocess.run(
+        [sys.executable, "-m", "pip", "install", "--user", package],
+        stdout=sys.stdout,
+        stderr=sys.stderr
+    )
 
 # Ensure required libraries are installed
 for package in ["joblib", "scikit-learn", "pandas", "numpy"]:
@@ -16,6 +19,7 @@ import joblib
 import pandas as pd
 import numpy as np
 from sklearn.preprocessing import StandardScaler
+
 
 
 
