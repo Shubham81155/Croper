@@ -19,7 +19,7 @@ def get_base64_image(image_path):
 # Convert background image to Base64
 background_image = get_base64_image("BGimage.jpg")
 
-# Apply custom styling with CSS (All text in white)
+# Apply custom styling with CSS (Lighter colors)
 st.markdown(
     f"""
     <style>
@@ -28,7 +28,7 @@ st.markdown(
         background-size: cover;
     }}
     .main-container {{
-        background: rgba(255, 255, 255, 0.7);
+        background: rgba(255, 255, 255, 0.6); /* Light transparent background */
         padding: 20px;
         border-radius: 10px;
     }}
@@ -36,7 +36,8 @@ st.markdown(
         color: white !important;
     }}
     .stButton>button {{
-        background-color: #148F77;
+        background-color: #AED6F1; /* Light blue */
+        color: black;
         font-size: 16px;
         padding: 10px 20px;
         border-radius: 5px;
@@ -44,7 +45,16 @@ st.markdown(
         width: 100%;
     }}
     .stButton>button:hover {{
-        background-color: #117A65;
+        background-color: #85C1E9; /* Slightly darker blue */
+    }}
+    .prediction-box {{
+        background: rgba(255, 255, 255, 0.8);
+        padding: 15px;
+        border-radius: 10px;
+        text-align: center;
+        color: black;
+        font-weight: bold;
+        font-size: 18px;
     }}
     </style>
     """,
@@ -110,7 +120,14 @@ if st.button("Predict Yield"):
         yield_class = "High"
 
     # Display prediction results
-    st.success(f"Predicted Crop Yield: **{predicted_yield:.2f} kg/ha**")
-    st.success(f"Yield Classification: **{yield_class}**")
+    st.markdown(
+        f"""
+        <div class="prediction-box">
+            Predicted Crop Yield: <strong>{predicted_yield:.2f} kg/ha</strong><br>
+            Yield Classification: <strong>{yield_class}</strong>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 
 st.markdown('</div>', unsafe_allow_html=True)  # Close container
