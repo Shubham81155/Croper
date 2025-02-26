@@ -19,7 +19,7 @@ def get_base64_image(image_path):
 # Convert background image to Base64
 background_image = get_base64_image("BGimage.jpg")
 
-# Apply custom styling with CSS
+# Apply custom styling with CSS (All text in white)
 st.markdown(
     f"""
     <style>
@@ -32,20 +32,11 @@ st.markdown(
         padding: 20px;
         border-radius: 10px;
     }}
-    h1 {{
-        color: #2E86C1;
-        text-align: center;
-        font-family: 'Arial', sans-serif;
-    }}
-    h2 {{
-        color: #148F77;
-        font-family: 'Arial', sans-serif;
-        border-bottom: 2px solid #148F77;
-        padding-bottom: 5px;
+    h1, h2, label, .stButton>button {{
+        color: white !important;
     }}
     .stButton>button {{
         background-color: #148F77;
-        color: white;
         font-size: 16px;
         padding: 10px 20px;
         border-radius: 5px;
