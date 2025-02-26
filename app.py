@@ -1,49 +1,25 @@
-import subprocess
-import sys
-
-def install(package):
-    subprocess.run(
-        [sys.executable, "-m", "pip", "install", "--user", package],
-        stdout=sys.stdout,
-        stderr=sys.stderr
-    )
-
-# Ensure required libraries are installed
-for package in ["joblib", "scikit-learn", "pandas", "numpy"]:
-    try:
-        __import__(package)
-    except ImportError:
-        install(package)
-
+import streamlit as st
 import joblib
 import pandas as pd
-import numpy as np
-from sklearn.preprocessing import StandardScaler
+import base64
 
+# Load the trained model and scaler
+loaded_model = joblib.load("crop_yield_model.pkl")
+loaded_scaler = joblib.load("scaler.pkl")
 
-
-
-
-# Load the model and scaler using pickle
-with open("crop_yield_model.pkl", "rb") as model_file:
-    loaded_model = pickle.load(model_file)
-
-with open("scaler.pkl", "rb") as scaler_file:
-    loaded_scaler = pickle.load(scaler_file)
-
-# Define thresholds for classification
+# Define thresholds for yield classification
 LOW_THRESHOLD = 300
 HIGH_THRESHOLD = 400
 
-# Function to encode the local image to Base64
+# Function to encode a local image to Base64
 def get_base64_image(image_path):
     with open(image_path, "rb") as img_file:
         return base64.b64encode(img_file.read()).decode()
 
-# Convert local background image to Base64
+# Convert background image to Base64
 background_image = get_base64_image("BGimage.jpg")
 
-# Apply the background image using CSS
+# Apply custom styling with CSS
 st.markdown(
     f"""
     <style>
@@ -85,9 +61,9 @@ st.markdown(
 )
 
 # Streamlit App Title
-st.title("Crop Yield Prediction App 🌾")
+st.title("🌾 Crop Yield Prediction App")
 
-# Input Fields
+# Input Fields for User
 st.header("Input Features")
 crop_type = st.selectbox("Crop Type", ["Wheat", "Corn", "Rice", "Soybean"])
 irrigation = st.selectbox("Irrigation", ["No", "Yes"])
@@ -106,12 +82,12 @@ with col2:
     sunlight = st.number_input("Sunlight (hours/day)", min_value=0.0, max_value=24.0, value=6.0)
     fertilizer_used = st.number_input("Fertilizer Used (kg/ha)", min_value=0, max_value=500, value=100)
 
-# Convert categorical inputs to numerical
+# Convert categorical inputs to numerical values
 irrigation = 1 if irrigation == "Yes" else 0
 crop_type_mapping = {"Wheat": 0, "Corn": 1, "Rice": 2, "Soybean": 3}
 crop_type = crop_type_mapping[crop_type]
 
-# Create a DataFrame for the input data
+# Prepare input data as DataFrame
 input_data = pd.DataFrame({
     "Nitrogen": [nitrogen],
     "Phosphorus": [phosphorus],
@@ -126,15 +102,15 @@ input_data = pd.DataFrame({
     "Crop_Type": [crop_type]
 })
 
-# Predict button
+# Prediction Button
 if st.button("Predict Yield"):
     # Scale the input data
     input_data_scaled = loaded_scaler.transform(input_data)
 
-    # Predict the yield
+    # Predict the yield using the trained model
     predicted_yield = loaded_model.predict(input_data_scaled)[0]
 
-    # Classify the yield
+    # Classify the predicted yield
     if predicted_yield < LOW_THRESHOLD:
         yield_class = "Low"
     elif LOW_THRESHOLD <= predicted_yield < HIGH_THRESHOLD:
@@ -142,8 +118,8 @@ if st.button("Predict Yield"):
     else:
         yield_class = "High"
 
-    # Display the results
+    # Display prediction results
     st.success(f"Predicted Crop Yield: **{predicted_yield:.2f} kg/ha**")
-    st.success(f"Yield Class: **{yield_class}**")
+    st.success(f"Yield Classification: **{yield_class}**")
 
 st.markdown('</div>', unsafe_allow_html=True)  # Close container
