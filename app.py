@@ -1,11 +1,14 @@
 import streamlit as st
-import joblib
+import pickle
 import pandas as pd
 import base64
 
-# Load the model and scaler
-loaded_model = joblib.load("crop_yield_model.pkl")
-loaded_scaler = joblib.load("scaler.pkl")
+# Load the model and scaler using pickle
+with open("crop_yield_model.pkl", "rb") as model_file:
+    loaded_model = pickle.load(model_file)
+
+with open("scaler.pkl", "rb") as scaler_file:
+    loaded_scaler = pickle.load(scaler_file)
 
 # Define thresholds for classification
 LOW_THRESHOLD = 300
@@ -27,27 +30,22 @@ st.markdown(
         background: url("data:image/jpg;base64,{background_image}") no-repeat center center fixed;
         background-size: cover;
     }}
-
-    /* Add overlay with opacity */
     .main-container {{
-        background: rgba(255, 255, 255, 0.7); /* Adjust opacity */
+        background: rgba(255, 255, 255, 0.7);
         padding: 20px;
         border-radius: 10px;
     }}
-
     h1 {{
         color: #2E86C1;
         text-align: center;
         font-family: 'Arial', sans-serif;
     }}
-
     h2 {{
         color: #148F77;
         font-family: 'Arial', sans-serif;
         border-bottom: 2px solid #148F77;
         padding-bottom: 5px;
     }}
-    
     .stButton>button {{
         background-color: #148F77;
         color: white;
@@ -57,16 +55,13 @@ st.markdown(
         border: none;
         width: 100%;
     }}
-
     .stButton>button:hover {{
         background-color: #117A65;
     }}
-    
     </style>
     """,
     unsafe_allow_html=True,
 )
-
 
 # Streamlit App Title
 st.title("Crop Yield Prediction App 🌾")
